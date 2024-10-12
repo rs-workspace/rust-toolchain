@@ -1,23 +1,25 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'rust-toolchain'
+description: 'GitHub actions for installing rust toolchain'
+author: 'Aditya Kumar'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
-branding:
-  icon: 'heart'
-  color: 'red'
+# branding:
+#   icon: 'heart'
+#   color: 'red'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  toolchain:
+    description: 'Rust Toolchain to be installed'
+  profile:
+    description: 'Rust Profile to be installed'
     required: true
-    default: '1000'
+    default: 'default'
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  installation:
+    description: 'version of Rust Toolchain and profile installed'
 
 runs:
   using: node20
