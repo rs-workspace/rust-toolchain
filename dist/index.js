@@ -25660,7 +25660,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = run;
 const core = __importStar(__nccwpck_require__(2186));
+const types_1 = __nccwpck_require__(5077);
 const toolchain_1 = __importDefault(__nccwpck_require__(6860));
+const exec_1 = __nccwpck_require__(1514);
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -25669,10 +25671,44 @@ async function run() {
     try {
         const platform = await core.platform.getDetails();
         const rust_toolchain = core.getInput('rust-toolchain', {
-            trimWhitespace: true
+            trimWhitespace: true,
+            required: true
         });
-        // Execute toolchain function
-        await (0, toolchain_1.default)(rust_toolchain, platform);
+        const profile = core.getInput('profile', {
+            trimWhitespace: true,
+            required: true
+        });
+        const properties = new types_1.Properties(rust_toolchain, profile);
+        properties.verify();
+        // install rust toolchain
+        await (0, toolchain_1.default)(properties, platform);
+        // Sumarize installation with tool versions
+        let rustc_version = '';
+        let rustup_version = '';
+        await (0, exec_1.exec)('rustc', ['--version'], {
+            listeners: {
+                stdout: (data) => {
+                    rustc_version += data.toString();
+                }
+            }
+        });
+        await (0, exec_1.exec)('rustup', ['--version'], {
+            listeners: {
+                stdout: (data) => {
+                    rustup_version += data.toString();
+                }
+            }
+        });
+        // Create a Table Summary
+        const version_info = [
+            [
+                { data: 'Tool', header: true },
+                { data: 'Version', header: true }
+            ],
+            ['rustc', rustc_version],
+            ['rustup', rustup_version]
+        ];
+        core.summary.addTable(version_info).write();
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -25722,14 +25758,10 @@ const utils_1 = __nccwpck_require__(1314);
  * @param {string} rust_toolchain
  * @param {Platform} platform
  */
-async function install_toolchain(rust_toolchain, platform) {
+async function install_toolchain(properties, platform) {
     try {
-        // Download and install Rust for the current Platform if rust isn't installed on the OS.
-        await download_rust(platform);
-        switch (rust_toolchain) {
-            case '':
-            // Install rust without any default version
-        }
+        // Download and install Rust for the current Platform
+        await download_rust(properties, platform);
     }
     catch (error) {
         if (error instanceof Error)
@@ -25737,15 +25769,16 @@ async function install_toolchain(rust_toolchain, platform) {
     }
 }
 /**
- * Download and install Rust for the current Platform if rust isn't installed on the OS.
+ * Download and install Rust for the current Platform.
  *
  * @async
+ * @param {Properties} properties installation properties
  * @param {Platform} platform
  * @returns {Promise<void | never>}
  */
-async function download_rust(platform) {
+async function download_rust(properties, platform) {
     try {
-        // TODO: Check if rust is already installed and skip this process
+        // Install the rustup-init installer for windows
         if (platform.isWindows) {
             if (platform.arch == 'x64') {
                 // Install 64 bit installer from rust-lang.org
@@ -25759,14 +25792,37 @@ async function download_rust(platform) {
                 throw new Error(`Unsupported Platform Architecture ${platform.arch}. Supported Architecture
              are 'x64' and 'ia32' for windows OS.`);
             }
-            // Now install rust via installer
-            // TODO: Ask User for the profile to be installed
-            await exec.exec('./rustup-init.exe -v --default-toolchain none --profile minimal -y');
+            // install rust via installer
+            await exec.exec('./rustup-init.exe', [
+                '-v',
+                '--default-toolchain',
+                properties.rust_toolchain,
+                '--profile',
+                properties.profile,
+                '-y'
+            ]);
+            // uninstall the installer
+            await exec.exec('rm', ['rustup-init.exe']);
         }
         else {
             // Install installer via direct script and download rust
-            // TODO: Ask User for the profile to be installed
-            await exec.exec(`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain none --profile minimal -y`);
+            await exec.exec('curl', [
+                '--proto',
+                'https',
+                '--tlsv1.2',
+                '-sSf',
+                'https://sh.rustup.rs',
+                '|',
+                'sh',
+                '-s',
+                '--',
+                '-v',
+                '--default-toolchain',
+                properties.rust_toolchain,
+                '--profile',
+                properties.profile,
+                '-y'
+            ]);
         }
     }
     catch (error) {
@@ -25774,6 +25830,56 @@ async function download_rust(platform) {
             throw error;
     }
 }
+
+
+/***/ }),
+
+/***/ 5077:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Properties = void 0;
+const core_1 = __nccwpck_require__(2186);
+class Properties {
+    rust_toolchain;
+    profile;
+    /**
+     * Creates an instance of Properties.
+     *
+     * @constructor
+     * @param {string} rust_toolchain
+     * @param {string} profile
+     */
+    constructor(rust_toolchain, profile) {
+        this.rust_toolchain = rust_toolchain;
+        this.profile = profile;
+    }
+    /**
+     * Verify if the properties are correct, throws an error when they aren't correct
+     *
+     * @returns {(void | never)}
+     */
+    verify() {
+        if (this.profile == 'default' ||
+            this.profile == 'minimal' ||
+            this.profile == 'complete')
+            (0, core_1.debug)(`Received Correct 'profile' input -> ${this.profile}`);
+        else
+            throw new Error(`Profile can be ('default', 'minimal', or 'complete') but not '${this.profile}'`);
+        if (this.rust_toolchain == 'stable' ||
+            this.rust_toolchain == 'nightly' ||
+            this.rust_toolchain == 'beta' ||
+            this.rust_toolchain == 'none')
+            (0, core_1.debug)(`Received Correct 'rust-toolchain' input -> ${this.rust_toolchain}`);
+        // Other rust_toolchain will be like `nightly-2024-10-12` which isn't needed to be verified here
+        // as it can be verified when passed in installation
+        else
+            (0, core_1.debug)(`Receieved 'rust-toolchain' input -> ${this.rust_toolchain}. This input isn't verified and will be verified in installation process`);
+    }
+}
+exports.Properties = Properties;
 
 
 /***/ }),
