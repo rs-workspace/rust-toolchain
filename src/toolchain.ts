@@ -72,17 +72,7 @@ async function download_rust(
     } else {
       // Install installer via direct script and download rust
       await exec.exec('curl', [
-        '--proto',
-        'https',
-        '--tlsv1.2',
-        '-sSf',
-        'https://sh.rustup.rs',
-        '|',
-        'sh',
-        '-s',
-        '--',
-        '-v',
-        '--default-toolchain',
+        '--proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain',
         properties.rust_toolchain,
         '--profile',
         properties.profile,
