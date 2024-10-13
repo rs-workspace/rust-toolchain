@@ -25796,7 +25796,9 @@ async function download_rust(properties, platform) {
             // Download rust installation script
             await (0, utils_1.download_file)(new URL('https://sh.rustup.rs'), 'rustup.sh');
             // Give Execute Permission to script
-            await exec.exec('chmod a+x ./rustup.sh');
+            await exec.exec('chmod +x ./rustup.sh');
+            // Ensure the file system is synced
+            await exec.exec('sync');
         }
         // Install rust
         await exec.exec(`${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`, [
