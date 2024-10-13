@@ -104,7 +104,9 @@ describe('install_toolchain', () => {
       'rustup.sh'
     )
 
-    expect(mockedExec).toHaveBeenCalledWith('chmod a+x ./rustup.sh')
+    expect(mockedExec).toHaveBeenCalledWith('chmod +x ./rustup.sh')
+
+    expect(mockedExec).toHaveBeenCalledWith('sync')
 
     expect(mockedExec).toHaveBeenCalledWith('./rustup.sh', [
       '-v',
