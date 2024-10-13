@@ -1,6 +1,5 @@
-import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import { Platform } from './types'
+import { Platform, Properties } from './types'
 import { download_file } from './utils'
 
 /**
@@ -10,32 +9,31 @@ import { download_file } from './utils'
  * @param {Platform} platform
  */
 export default async function install_toolchain(
-  rust_toolchain: string,
+  properties: Properties,
   platform: Platform
 ): Promise<void | never> {
   try {
-    // Download and install Rust for the current Platform if rust isn't installed on the OS.
-    await download_rust(platform)
-
-    switch (rust_toolchain) {
-      case '':
-      // Install rust without any default version
-    }
+    // Download and install Rust for the current Platform
+    await download_rust(properties, platform)
   } catch (error) {
     if (error instanceof Error) throw error
   }
 }
 
 /**
- * Download and install Rust for the current Platform if rust isn't installed on the OS.
+ * Download and install Rust for the current Platform.
  *
  * @async
+ * @param {Properties} properties installation properties
  * @param {Platform} platform
  * @returns {Promise<void | never>}
  */
-async function download_rust(platform: Platform): Promise<void | never> {
+async function download_rust(
+  properties: Properties,
+  platform: Platform
+): Promise<void | never> {
   try {
-    // TODO: Check if rust is already installed and skip this process
+    // Install the rustup-init installer for windows
     if (platform.isWindows) {
       if (platform.arch == 'x64') {
         // Install 64 bit installer from rust-lang.org
@@ -60,17 +58,37 @@ async function download_rust(platform: Platform): Promise<void | never> {
         )
       }
 
-      // Now install rust via installer
-      // TODO: Ask User for the profile to be installed
-      await exec.exec(
-        './rustup-init.exe -v --default-toolchain none --profile minimal -y'
-      )
+      // install rust via installer
+      await exec.exec('./rustup-init.exe', [
+        '-v',
+        '--default-toolchain',
+        properties.rust_toolchain,
+        '--profile',
+        properties.profile,
+        '-y'
+      ])
+
+      // uninstall the installer
+      await exec.exec('rm', ['rustup-init.exe'])
     } else {
       // Install installer via direct script and download rust
-      // TODO: Ask User for the profile to be installed
-      await exec.exec(
-        `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain none --profile minimal -y`
-      )
+      await exec.exec('curl', [
+        '--proto',
+        'https',
+        '--tlsv1.2',
+        '-sSf',
+        'https://sh.rustup.rs',
+        '|',
+        'sh',
+        '-s',
+        '--',
+        '-v',
+        '--default-toolchain',
+        properties.rust_toolchain,
+        '--profile',
+        properties.profile,
+        '-y'
+      ])
     }
   } catch (error) {
     if (error instanceof Error) throw error

@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { Platform } from './types'
+import { Platform, Properties } from './types'
 import install_toolchain from './toolchain'
 
 /**
@@ -10,11 +10,19 @@ export async function run(): Promise<void> {
   try {
     const platform: Platform = await core.platform.getDetails()
     const rust_toolchain: string = core.getInput('rust-toolchain', {
-      trimWhitespace: true
+      trimWhitespace: true,
+      required: true
+    })
+    const profile: string = core.getInput('profile', {
+      trimWhitespace: true,
+      required: true
     })
 
-    // Execute toolchain function
-    await install_toolchain(rust_toolchain, platform)
+    const properties = new Properties(rust_toolchain, profile)
+    properties.verify()
+
+    // install rust toolchain
+    await install_toolchain(properties, platform)
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
