@@ -25800,6 +25800,8 @@ async function download_rust(properties, platform) {
             // Ensure the file system is synced
             await exec.exec('sync');
         }
+        // Sleep for 1 second i.e. 1000ms
+        await (0, utils_1.delay)(1000);
         // Install rust
         await exec.exec(`${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`, [
             '-v',
@@ -25901,6 +25903,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.download_file = download_file;
+exports.delay = delay;
 const fs_1 = __nccwpck_require__(7147);
 const http = __importStar(__nccwpck_require__(3685));
 const https = __importStar(__nccwpck_require__(5687));
@@ -25934,6 +25937,17 @@ async function download_file(url, path) {
         .on('error', err => {
         throw err;
     });
+}
+/**
+ * Sleeps for the said amount of time (in ms)
+ *
+ * @export
+ * @async
+ * @param {number} ms Time in milliseconds for the delay
+ * @returns {void}
+ */
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 

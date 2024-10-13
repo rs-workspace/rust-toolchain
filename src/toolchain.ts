@@ -1,6 +1,6 @@
 import * as exec from '@actions/exec'
 import { Platform, Properties } from './types'
-import { download_file } from './utils'
+import { delay, download_file } from './utils'
 
 /**
  * Installs specified Rust Toolchain
@@ -66,6 +66,9 @@ async function download_rust(
       // Ensure the file system is synced
       await exec.exec('sync')
     }
+
+    // Sleep for 1 second i.e. 1000ms
+    await delay(1000)
 
     // Install rust
     await exec.exec(
