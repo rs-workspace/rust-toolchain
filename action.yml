@@ -11,9 +11,9 @@ author: 'Aditya Kumar'
 inputs:
   toolchain:
     description: 'Rust Toolchain to be installed'
+    default: 'stable'
   profile:
     description: 'Rust Profile to be installed'
-    required: true
     default: 'default'
 
 # Define your outputs here.
