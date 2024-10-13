@@ -1,11 +1,11 @@
-name: 'rust-toolchain'
+name: 'rs-workspace/rust-toolchain'
 description: 'GitHub actions for installing rust toolchain'
 author: 'Aditya Kumar'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
-# branding:
-#   icon: 'heart'
-#   color: 'red'
+branding:
+  icon: 'arrow-down-circle'
+  color: 'red'
 
 # Define your inputs here.
 inputs:
@@ -15,11 +15,6 @@ inputs:
   profile:
     description: 'Rust Profile to be installed'
     default: 'default'
-
-# Define your outputs here.
-outputs:
-  installation:
-    description: 'version of Rust Toolchain and profile installed'
 
 runs:
   using: node20
