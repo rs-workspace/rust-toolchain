@@ -53,8 +53,7 @@ async function download_rust(
         )
       } else {
         throw new Error(
-          `Unsupported Platform Architecture ${platform.arch}. Supported Architecture
-             are 'x64' and 'ia32' for windows OS.`
+          `Unsupported Platform Architecture ${platform.arch}. Supported Architecture are 'x64' and 'ia32' for windows OS.`
         )
       }
 

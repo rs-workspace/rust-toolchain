@@ -25789,8 +25789,7 @@ async function download_rust(properties, platform) {
                 await (0, utils_1.download_file)(new URL('https://static.rust-lang.org/rustup/dist/i686-pc-windows-msvc/rustup-init.exe'), 'rustup-init.exe');
             }
             else {
-                throw new Error(`Unsupported Platform Architecture ${platform.arch}. Supported Architecture
-             are 'x64' and 'ia32' for windows OS.`);
+                throw new Error(`Unsupported Platform Architecture ${platform.arch}. Supported Architecture are 'x64' and 'ia32' for windows OS.`);
             }
             // install rust via installer
             await exec.exec('./rustup-init.exe', [
