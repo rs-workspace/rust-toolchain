@@ -25792,27 +25792,13 @@ async function download_rust(properties, platform) {
                 throw new Error(`Unsupported Platform Architecture ${platform.arch}. Supported Architecture are 'x64' and 'ia32' for windows OS.`);
             }
             // install rust via installer
-            await exec.exec('./rustup-init.exe', [
-                '-v',
-                '--default-toolchain',
-                properties.rust_toolchain,
-                '--profile',
-                properties.profile,
-                '-y'
-            ]);
+            await exec.exec(`./rustup-init.exe -v --default-toolchain ${properties.rust_toolchain} --profile ${properties.profile} -y`);
             // uninstall the installer
-            await exec.exec('rm', ['rustup-init.exe']);
+            await exec.exec('rm rustup-init.exe');
         }
         else {
             // Install installer via direct script and download rust
-            await exec.exec('curl', [
-                '--proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v',
-                '--default-toolchain',
-                properties.rust_toolchain,
-                '--profile',
-                properties.profile,
-                '-y'
-            ]);
+            await exec.exec(`curl --proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain ${properties.rust_toolchain} --profile ${properties.profile} -y`);
         }
     }
     catch (error) {

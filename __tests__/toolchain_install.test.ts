@@ -45,16 +45,11 @@ describe('install_toolchain', () => {
       'rustup-init.exe'
     )
 
-    expect(mockedExec).toHaveBeenCalledWith('./rustup-init.exe', [
-      '-v',
-      '--default-toolchain',
-      'stable',
-      '--profile',
-      'minimal',
-      '-y'
-    ])
+    expect(mockedExec).toHaveBeenCalledWith(
+      './rustup-init.exe -v --default-toolchain stable --profile minimal -y'
+    )
 
-    expect(mockedExec).toHaveBeenCalledWith('rm', ['rustup-init.exe'])
+    expect(mockedExec).toHaveBeenCalledWith('rm rustup-init.exe')
   })
 
   test('should install Rust on Windows ia32', async () => {
@@ -70,16 +65,11 @@ describe('install_toolchain', () => {
       'rustup-init.exe'
     )
 
-    expect(mockedExec).toHaveBeenCalledWith('./rustup-init.exe', [
-      '-v',
-      '--default-toolchain',
-      'stable',
-      '--profile',
-      'minimal',
-      '-y'
-    ])
+    expect(mockedExec).toHaveBeenCalledWith(
+      './rustup-init.exe -v --default-toolchain stable --profile minimal -y'
+    )
 
-    expect(mockedExec).toHaveBeenCalledWith('rm', ['rustup-init.exe'])
+    expect(mockedExec).toHaveBeenCalledWith('rm rustup-init.exe')
   })
 
   test('should throw an error for unsupported architecture on Windows', async () => {
@@ -100,14 +90,9 @@ describe('install_toolchain', () => {
     await install_toolchain(properties, platform)
 
     expect(mockedDownloadFile).not.toHaveBeenCalled()
-    expect(mockedExec).toHaveBeenCalledWith('curl', [
-      '--proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v',
-      '--default-toolchain',
-      'stable',
-      '--profile',
-      'minimal',
-      '-y'
-    ])
+    expect(mockedExec).toHaveBeenCalledWith(
+      'curl --proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain stable --profile minimal -y'
+    )
   })
 
   test('should handle errors thrown by download_rust', async () => {
