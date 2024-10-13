@@ -101,7 +101,8 @@ describe('install_toolchain', () => {
 
     expect(mockedDownloadFile).not.toHaveBeenCalled()
     expect(mockedExec).toHaveBeenCalledWith('curl', [
-      '--proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain',
+      '--proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v',
+      '--default-toolchain',
       'stable',
       '--profile',
       'minimal',
