@@ -4,13 +4,13 @@
   "version": "0.1.0",
   "author": "Aditya Kumar",
   "private": true,
-  "homepage": "https://github.com/as1100k/cargo-release",
+  "homepage": "https://github.com/rs-workspace/rust-toolchain",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/as1100k/cargo-release.git"
+    "url": "git+https://github.com/rs-workspace/rust-toolchain.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/rs-workspace/rust-toolchain/issues"
   },
   "keywords": [
     "actions",
