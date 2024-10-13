@@ -45,11 +45,16 @@ describe('install_toolchain', () => {
       'rustup-init.exe'
     )
 
-    expect(mockedExec).toHaveBeenCalledWith(
-      './rustup-init.exe -v --default-toolchain stable --profile minimal -y'
-    )
+    expect(mockedExec).toHaveBeenCalledWith('./rustup-init.exe', [
+      '-v',
+      '--default-toolchain',
+      'stable',
+      '--profile',
+      'minimal',
+      '-y'
+    ])
 
-    expect(mockedExec).toHaveBeenCalledWith('rm rustup-init.exe')
+    expect(mockedExec).toHaveBeenCalledWith('rm ./rustup-init.exe')
   })
 
   test('should install Rust on Windows ia32', async () => {
@@ -65,11 +70,16 @@ describe('install_toolchain', () => {
       'rustup-init.exe'
     )
 
-    expect(mockedExec).toHaveBeenCalledWith(
-      './rustup-init.exe -v --default-toolchain stable --profile minimal -y'
-    )
+    expect(mockedExec).toHaveBeenCalledWith('./rustup-init.exe', [
+      '-v',
+      '--default-toolchain',
+      'stable',
+      '--profile',
+      'minimal',
+      '-y'
+    ])
 
-    expect(mockedExec).toHaveBeenCalledWith('rm rustup-init.exe')
+    expect(mockedExec).toHaveBeenCalledWith('rm ./rustup-init.exe')
   })
 
   test('should throw an error for unsupported architecture on Windows', async () => {
@@ -77,7 +87,7 @@ describe('install_toolchain', () => {
     platform.arch = 'unsupported_arch'
 
     await expect(install_toolchain(properties, platform)).rejects.toThrow(
-      "Unsupported Platform Architecture unsupported_arch. Supported Architecture are 'x64' and 'ia32' for windows OS."
+      "Unsupported Platform Architecture 'unsupported_arch'. Supported Architecture are 'x64' and 'ia32' for windows OS."
     )
 
     expect(mockedDownloadFile).not.toHaveBeenCalled()
@@ -89,10 +99,23 @@ describe('install_toolchain', () => {
 
     await install_toolchain(properties, platform)
 
-    expect(mockedDownloadFile).not.toHaveBeenCalled()
-    expect(mockedExec).toHaveBeenCalledWith(
-      'curl --proto https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -v --default-toolchain stable --profile minimal -y'
+    expect(mockedDownloadFile).toHaveBeenCalledWith(
+      new URL('https://sh.rustup.rs'),
+      'rustup.sh'
     )
+
+    expect(mockedExec).toHaveBeenCalledWith('chmod a+x ./rustup.sh')
+
+    expect(mockedExec).toHaveBeenCalledWith('./rustup.sh', [
+      '-v',
+      '--default-toolchain',
+      'stable',
+      '--profile',
+      'minimal',
+      '-y'
+    ])
+
+    expect(mockedExec).toHaveBeenCalledWith('rm ./rustup.sh')
   })
 
   test('should handle errors thrown by download_rust', async () => {
@@ -106,5 +129,6 @@ describe('install_toolchain', () => {
     )
 
     expect(mockedDownloadFile).toHaveBeenCalledTimes(1)
+    expect(mockedExec).not.toHaveBeenCalled()
   })
 })
