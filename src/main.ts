@@ -10,7 +10,7 @@ import { exec } from '@actions/exec'
 export async function run(): Promise<void> {
   try {
     const platform: Platform = await core.platform.getDetails()
-    const rust_toolchain: string = core.getInput('rust-toolchain', {
+    const rust_toolchain: string = core.getInput('toolchain', {
       trimWhitespace: true,
       required: true
     })

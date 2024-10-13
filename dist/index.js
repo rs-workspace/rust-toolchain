@@ -25670,7 +25670,7 @@ const exec_1 = __nccwpck_require__(1514);
 async function run() {
     try {
         const platform = await core.platform.getDetails();
-        const rust_toolchain = core.getInput('rust-toolchain', {
+        const rust_toolchain = core.getInput('toolchain', {
             trimWhitespace: true,
             required: true
         });
