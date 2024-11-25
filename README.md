@@ -31,10 +31,11 @@ this you need to pass the inputs:
 
 All inputs are optional
 
-| Name        | Description                                                                                                                                                    |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `toolchain` | Rust toolchain specifier e.g. `stable`, `nightly`, `beta`, `nightly-2024-10-12`, etc. [Read More](https://rust-lang.github.io/rustup/concepts/toolchains.html) |
-| `profile`   | The group of components to be installed. [Read More](https://rust-lang.github.io/rustup/concepts/profiles.html)                                                |
+| Name         | Description                                                                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `toolchain`  | Rust toolchain specifier e.g. `stable`, `nightly`, `beta`, `nightly-2024-10-12`, etc. [Read More](https://rust-lang.github.io/rustup/concepts/toolchains.html) |
+| `profile`    | The group of components to be installed. [Read More](https://rust-lang.github.io/rustup/concepts/profiles.html)                                                |
+| `components` | The list of space seperated rust components. [Read More](https://rust-lang.github.io/rustup/concepts/components.html)                                          |
 
 <details>
 <summary>Example</summary>
@@ -51,8 +52,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: rs-workflow/rust-toolchain@main
         with:
-          toolchain: nightly-2024-10-12
-          profile: minimal
+          toolchain: nightly-2024-10-12 # Optional; Defaults to stable
+          profile: minimal # Optional; Defaults to default
+          components: miri # Optional
       - run: cargo test --all-features
 ```
 

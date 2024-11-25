@@ -70,17 +70,24 @@ async function download_rust(
     // Sleep for 1 second i.e. 1000ms
     await delay(1000)
 
+    const execution_arguments = [
+      '-v',
+      '--default-toolchain',
+      properties.rust_toolchain,
+      '--profile',
+      properties.profile,
+      '-y'
+    ]
+
+    if (properties.components !== '') {
+      execution_arguments.push('--component')
+      execution_arguments.push(properties.components)
+    }
+
     // Install rust
     await exec.exec(
       `${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`,
-      [
-        '-v',
-        '--default-toolchain',
-        properties.rust_toolchain,
-        '--profile',
-        properties.profile,
-        '-y'
-      ]
+      execution_arguments
     )
 
     // Uninstall script or installer

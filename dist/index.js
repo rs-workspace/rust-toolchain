@@ -25678,7 +25678,10 @@ async function run() {
             trimWhitespace: true,
             required: true
         });
-        const properties = new types_1.Properties(rust_toolchain, profile);
+        const components = core.getInput('components', {
+            trimWhitespace: true
+        });
+        const properties = new types_1.Properties(rust_toolchain, profile, components);
         properties.verify();
         // install rust toolchain
         await (0, toolchain_1.default)(properties, platform);
@@ -25802,15 +25805,20 @@ async function download_rust(properties, platform) {
         }
         // Sleep for 1 second i.e. 1000ms
         await (0, utils_1.delay)(1000);
-        // Install rust
-        await exec.exec(`${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`, [
+        const execution_arguments = [
             '-v',
             '--default-toolchain',
             properties.rust_toolchain,
             '--profile',
             properties.profile,
             '-y'
-        ]);
+        ];
+        if (properties.components !== '') {
+            execution_arguments.push('--component');
+            execution_arguments.push(properties.components);
+        }
+        // Install rust
+        await exec.exec(`${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`, execution_arguments);
         // Uninstall script or installer
         await exec.exec(`rm ${platform.isWindows ? './rustup-init.exe' : './rustup.sh'}`);
     }
@@ -25834,16 +25842,19 @@ const core_1 = __nccwpck_require__(7484);
 class Properties {
     rust_toolchain;
     profile;
+    components;
     /**
      * Creates an instance of Properties.
      *
      * @constructor
      * @param {string} rust_toolchain
      * @param {string} profile
+     * @param {components} components
      */
-    constructor(rust_toolchain, profile) {
+    constructor(rust_toolchain, profile, components) {
         this.rust_toolchain = rust_toolchain;
         this.profile = profile;
+        this.components = components;
     }
     /**
      * Verify if the properties are correct, throws an error when they aren't correct

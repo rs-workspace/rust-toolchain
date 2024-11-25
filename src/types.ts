@@ -14,6 +14,7 @@ export interface Platform {
 export class Properties {
   rust_toolchain: string
   profile: string
+  components: string
 
   /**
    * Creates an instance of Properties.
@@ -21,10 +22,12 @@ export class Properties {
    * @constructor
    * @param {string} rust_toolchain
    * @param {string} profile
+   * @param {components} components
    */
-  constructor(rust_toolchain: string, profile: string) {
+  constructor(rust_toolchain: string, profile: string, components: string) {
     this.rust_toolchain = rust_toolchain
     this.profile = profile
+    this.components = components
   }
 
   /**

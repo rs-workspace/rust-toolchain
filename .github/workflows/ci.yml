@@ -59,6 +59,7 @@ jobs:
         with:
           toolchain: stable
           profile: minimal
+          components: miri
 
       - name: Print Output
         id: output
