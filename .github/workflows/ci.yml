@@ -57,9 +57,12 @@ jobs:
         id: test-action
         uses: ./
         with:
-          toolchain: stable
+          toolchain: nightly
           profile: minimal
           components: miri
+
+      - name: Test miri --help
+        run: cargo miri --help
 
       - name: Print Output
         id: output
