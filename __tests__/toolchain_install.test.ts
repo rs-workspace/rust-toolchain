@@ -16,7 +16,7 @@ describe('install_toolchain', () => {
   let platform: Platform
 
   beforeEach(() => {
-    properties = new Properties('stable', 'minimal')
+    properties = new Properties('stable', 'minimal', '')
 
     platform = {
       name: 'Windows',

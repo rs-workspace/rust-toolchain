@@ -10,6 +10,7 @@ import { exec } from '@actions/exec'
 export async function run(): Promise<void> {
   try {
     const platform: Platform = await core.platform.getDetails()
+
     const rust_toolchain: string = core.getInput('toolchain', {
       trimWhitespace: true,
       required: true
@@ -18,8 +19,11 @@ export async function run(): Promise<void> {
       trimWhitespace: true,
       required: true
     })
+    const components: string = core.getInput('components', {
+      trimWhitespace: true
+    })
 
-    const properties = new Properties(rust_toolchain, profile)
+    const properties = new Properties(rust_toolchain, profile, components)
     properties.verify()
 
     // install rust toolchain
