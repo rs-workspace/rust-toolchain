@@ -5,6 +5,8 @@
   "author": "Aditya Kumar",
   "private": false,
   "homepage": "https://github.com/rs-workspace/rust-toolchain",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rs-workspace/rust-toolchain.git"
