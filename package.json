@@ -1,12 +1,10 @@
 {
-  "name": "@rs-workspace/rust-toolchain",
+  "name": "rust-toolchain",
   "description": "GitHub actions for installing rust toolchain",
-  "version": "0.2.1",
+  "version": "0.2.0",
   "author": "Aditya Kumar",
-  "private": false,
+  "private": true,
   "homepage": "https://github.com/rs-workspace/rust-toolchain",
-  "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rs-workspace/rust-toolchain.git"

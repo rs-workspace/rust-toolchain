@@ -13,9 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "newLine": "lf",
-    "declaration": true,
-    "declarationDir": "./types"
+    "newLine": "lf"
   },
   "exclude": ["./dist", "./node_modules", "./__tests__", "./coverage"]
 }
