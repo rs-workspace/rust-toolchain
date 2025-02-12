@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rs-workflow/rust-toolchain@main
+      - uses: rs-workspace/rust-toolchain@main
       - run: cargo test --all-features
 ```
 
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rs-workflow/rust-toolchain@main
+      - uses: rs-workspace/rust-toolchain@main
         with:
           toolchain: nightly-2024-10-12 # Optional; Defaults to stable
           profile: minimal # Optional; Defaults to default
