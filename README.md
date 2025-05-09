@@ -8,7 +8,8 @@
 
 GitHub actions for installing rust toolchain
 
-> [!WARNING] This action has been deprecated. It is recommended to use `rustup`,
+> [!WARNING]
+> This action has been deprecated. It is recommended to use `rustup`,
 > which is pre-installed on GitHub-hosted runners, or alternatively, consider
 > using the `dtolnay/rust-toolchain` action available at
 > https://github.com/dtolnay/rust-toolchain for better support and
