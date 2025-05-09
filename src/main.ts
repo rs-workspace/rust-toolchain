@@ -9,6 +9,9 @@ import { exec } from '@actions/exec'
  */
 export async function run(): Promise<void> {
   try {
+    core.error(
+      'This action has been deprecated. It is recommended to use `rustup`, which is pre-installed on GitHub-hosted runners, or alternatively, consider using the `dtolnay/rust-toolchain` action available at https://github.com/dtolnay/rust-toolchain for better support and functionality.'
+    )
     const platform: Platform = await core.platform.getDetails()
 
     const rust_toolchain: string = core.getInput('toolchain', {

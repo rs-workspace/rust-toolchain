@@ -25679,6 +25679,7 @@ const exec_1 = __nccwpck_require__(5236);
  */
 async function run() {
     try {
+        core.error('This action has been deprecated. It is recommended to use `rustup`, which is pre-installed on GitHub-hosted runners, or alternatively, consider using the `dtolnay/rust-toolchain` action available at https://github.com/dtolnay/rust-toolchain for better support and functionality.');
         const platform = await core.platform.getDetails();
         const rust_toolchain = core.getInput('toolchain', {
             trimWhitespace: true,
